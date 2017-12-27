@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Tamboon-Mobile</string>
+
+    <string name="name_label">Name</string>
+    <string name="amount_label">Amount</string>
+
+    <string name="finish_label">Donation complete</string>
+    <string name="finish_button_label">Home</string>
+</resources>
