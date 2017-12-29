@@ -34,7 +34,7 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
     }
 
     private void getDatabase() {
-        String url = "http://192.168.1.3:8080/charities";
+        String url = getString(R.string.server_url) + getString(R.string.charities);
         new CharityGetRequest(this).execute(url);
     }
 
