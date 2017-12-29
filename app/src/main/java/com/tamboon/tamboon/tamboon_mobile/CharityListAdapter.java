@@ -1,6 +1,7 @@
 package com.tamboon.tamboon.tamboon_mobile;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class CharityListAdapter extends RecyclerView.Adapter<CharityListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mItem = charityArray.get(position);
         holder.mNameTextView.setText(holder.mItem.getName());
+        Log.d("123", "onBindViewHolder: " + holder.mNameTextView.getText().toString());
     }
 
     @Override

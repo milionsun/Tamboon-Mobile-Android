@@ -1,9 +1,11 @@
 package com.tamboon.tamboon.tamboon_mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -26,23 +28,31 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charity_list);
         recyclerView = (RecyclerView) findViewById(R.id.charityList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         getDatabase();
     }
 
     private void getDatabase() {
-        String url = "127.0.0.1:8080/charities";
-        new CharityGetRequest().execute(url);
+        String url = "http://192.168.1.3:8080/charities";
+        new CharityGetRequest(this).execute(url);
     }
 
     @Override
     public void charitySelected(CharityObject charity) {
-
+        Intent intent = new Intent(this, DonationActivity.class);
+        startActivity(intent);
     }
 
     public class CharityGetRequest extends AsyncTask<String, Void, String> {
-        public static final String REQUEST_METHOD = "GET";
-        public static final int READ_TIMEOUT = 15000;
-        public static final int CONNECTION_TIMEOUT = 15000;
+        private static final String REQUEST_METHOD = "GET";
+        private static final int READ_TIMEOUT = 15000;
+        private static final int CONNECTION_TIMEOUT = 15000;
+        private Context mContext;
+
+        private CharityGetRequest(Context context) {
+            this.mContext = context;
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -96,9 +106,8 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
                     return;
                 }
 
-                Context context = getBaseContext();
-                if (context instanceof CharityListAdapter.CharityListListener) {
-                    CharityListAdapter adapter = new CharityListAdapter(charityArray, (CharityListAdapter.CharityListListener) context);
+                if (mContext instanceof CharityListAdapter.CharityListListener) {
+                    CharityListAdapter adapter = new CharityListAdapter(charityArray, (CharityListAdapter.CharityListListener) mContext);
                     recyclerView.setAdapter(adapter);
                 } else {
                     return;
