@@ -30,7 +30,6 @@ import co.omise.android.models.Token;
 import co.omise.android.ui.CreditCardActivity;
 
 public class DonationActivity extends AppCompatActivity {
-    private static final String OMISE_PKEY = "pkey_test_5aajhp4l3ouwpae8cg1";
     private static final int REQUEST_CC = 100;
     private static final String TAG = "DonationActivity";
 
@@ -85,7 +84,7 @@ public class DonationActivity extends AppCompatActivity {
 
     void showCreditCardForm() {
         Intent intent = new Intent(this, CreditCardActivity.class);
-        intent.putExtra(CreditCardActivity.EXTRA_PKEY, OMISE_PKEY);
+        intent.putExtra(CreditCardActivity.EXTRA_PKEY, getString(R.string.omise_pkey));
         startActivityForResult(intent, REQUEST_CC);
     }
 

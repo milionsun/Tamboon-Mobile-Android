@@ -9,6 +9,7 @@
     <string name="finish_button_label">Home</string>
 
     <string name="server_url">http://192.168.1.7:8080</string>
+    <string name="omise_pkey">pkey_test_5aajhp4l3ouwpae8cg1</string>
     <string name="charities">/charities</string>
     <string name="donations">/donations</string>
 
