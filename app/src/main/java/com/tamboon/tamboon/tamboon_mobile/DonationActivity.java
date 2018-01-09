@@ -1,5 +1,7 @@
 package com.tamboon.tamboon.tamboon_mobile;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +35,16 @@ public class DonationActivity extends AppCompatActivity {
     private EditText nameEditText;
     private EditText amountEditText;
     private Button creditCardButton;
+    private ProgressBar progressBar;
+    private View contentView;
     private int amount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation);
+        contentView = findViewById(R.id.contentView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         nameEditText = (EditText) findViewById(R.id.nameEditText);
 
         creditCardButton = (Button) findViewById(R.id.creditCardButton);
@@ -96,6 +103,7 @@ public class DonationActivity extends AppCompatActivity {
     }
 
     void sendPostRequest(Token token) {
+        showProgress(true);
         try {
             Double amount = Double.parseDouble(amountEditText.getText().toString());
 
@@ -107,6 +115,7 @@ public class DonationActivity extends AppCompatActivity {
             new DonatePostRequest(object).execute(url);
         } catch (JSONException e) {
             e.printStackTrace();
+            showProgress(false);
         }
     }
 
@@ -177,6 +186,32 @@ public class DonationActivity extends AppCompatActivity {
             if (result == 200) {
                 showFinishPage();
             }
+            showProgress(false);
         }
+    }
+
+    private void showProgress(final boolean show) {
+        int animTime = 200;
+        try {
+            animTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
+        contentView.setVisibility(show ? View.GONE : View.VISIBLE);
+        contentView.animate().setDuration(animTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                contentView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressBar.animate().setDuration(animTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 }

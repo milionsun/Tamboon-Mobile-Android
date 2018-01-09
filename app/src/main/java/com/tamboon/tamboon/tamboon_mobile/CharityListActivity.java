@@ -1,12 +1,18 @@
 package com.tamboon.tamboon.tamboon_mobile;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +28,7 @@ import java.util.List;
 
 public class CharityListActivity extends AppCompatActivity implements CharityListAdapter.CharityListListener {
     RecyclerView recyclerView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +37,13 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
         recyclerView = (RecyclerView) findViewById(R.id.charityList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         getDatabase();
     }
 
     private void getDatabase() {
         String url = getString(R.string.server_url) + getString(R.string.charities);
+        showProgress(true);
         new CharityGetRequest(this).execute(url);
     }
 
@@ -92,29 +101,71 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (s != null) {
-                List<CharityObject> charityArray = new ArrayList<>();
-
-                try {
-                    JSONArray jsonArray = new JSONArray(s);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        charityArray.add(new CharityObject(object));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                if (mContext instanceof CharityListAdapter.CharityListListener) {
-                    CharityListAdapter adapter = new CharityListAdapter(charityArray, (CharityListAdapter.CharityListListener) mContext);
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    return;
-                }
-            } else {
+            if (s == null) {
+                showProgress(false);
+                showAlertDialog();
                 return;
             }
+
+            List<CharityObject> charityArray = new ArrayList<>();
+
+            try {
+                JSONArray jsonArray = new JSONArray(s);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    charityArray.add(new CharityObject(object));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (mContext instanceof CharityListAdapter.CharityListListener) {
+                CharityListAdapter adapter = new CharityListAdapter(charityArray, (CharityListAdapter.CharityListListener) mContext);
+                recyclerView.setAdapter(adapter);
+            } else {
+                showProgress(false);
+                return;
+            }
+            showProgress(false);
         }
+    }
+
+    private void showProgress(final boolean show) {
+        int animTime = 200;
+        try {
+            animTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
+        recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+        recyclerView.animate().setDuration(animTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressBar.animate().setDuration(animTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle(R.string.connection_timeout_title)
+                .setMessage(R.string.connection_timeout_message)
+                .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getDatabase();
+                    }
+                })
+                .show();
     }
 }

@@ -7,7 +7,12 @@
     <string name="finish_label">Donation complete</string>
     <string name="finish_button_label">Home</string>
 
-    <string name="server_url">http://192.168.1.3:8080</string>
+    <string name="server_url">http://192.168.1.7:8080</string>
     <string name="charities">/charities</string>
     <string name="donations">/donations</string>
+
+    <string name="connection_timeout_title">Connection Timeout</string>
+    <string name="connection_timeout_message">Cannot connect to server!</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
 </resources>
