@@ -26,6 +26,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Show list of Charity's names
+ * Press any charity's name to go to DonationActivity.java
+ */
+
 public class CharityListActivity extends AppCompatActivity implements CharityListAdapter.CharityListListener {
     RecyclerView recyclerView;
     ProgressBar progressBar;
@@ -41,18 +46,21 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
         getDatabase();
     }
 
+    // Connect to server to get Charities information
     private void getDatabase() {
         String url = getString(R.string.server_url) + getString(R.string.charities);
         showProgress(true);
         new CharityGetRequest(this).execute(url);
     }
 
+    // Show DonationActivity
     @Override
     public void charitySelected(CharityObject charity) {
         Intent intent = new Intent(this, DonationActivity.class);
         startActivity(intent);
     }
 
+    // AsyncTask for HTTP GET Request
     public class CharityGetRequest extends AsyncTask<String, Void, String> {
         private static final String REQUEST_METHOD = "GET";
         private static final int READ_TIMEOUT = 15000;
@@ -131,6 +139,7 @@ public class CharityListActivity extends AppCompatActivity implements CharityLis
         }
     }
 
+    // Show/Hide Progress Spinner
     private void showProgress(final boolean show) {
         int animTime = 200;
         try {

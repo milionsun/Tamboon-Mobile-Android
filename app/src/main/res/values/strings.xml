@@ -8,7 +8,9 @@
     <string name="finish_label">Donation complete</string>
     <string name="finish_button_label">Home</string>
 
+    <!--Change this string for your own server-->
     <string name="server_url">http://192.168.1.7:8080</string>
+    <!--Change this string for your own Omise pkey-->
     <string name="omise_pkey">pkey_test_5aajhp4l3ouwpae8cg1</string>
     <string name="charities">/charities</string>
     <string name="donations">/donations</string>

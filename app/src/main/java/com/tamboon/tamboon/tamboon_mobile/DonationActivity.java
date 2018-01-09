@@ -29,6 +29,14 @@ import java.net.URL;
 import co.omise.android.models.Token;
 import co.omise.android.ui.CreditCardActivity;
 
+/**
+ * Show Donation Form
+ * Button will be enabled after insert valid number in amountEditText
+ * Press button to show CreditCardActivity from Omise Android SDK
+ * Send HTTP POST Request after finish CreditCardActivity
+ * Go to FinishPageActivity.java after finish POST Request
+ */
+
 public class DonationActivity extends AppCompatActivity {
     private static final int REQUEST_CC = 100;
     private static final String TAG = "DonationActivity";
@@ -38,7 +46,6 @@ public class DonationActivity extends AppCompatActivity {
     private Button creditCardButton;
     private ProgressBar progressBar;
     private View contentView;
-    private int amount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +80,11 @@ public class DonationActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 try {
                     Double amount = Double.parseDouble(editable.toString());
-                    creditCardButton.setEnabled(true);
+                    if (amount > 0) {
+                        creditCardButton.setEnabled(true);
+                    } else {
+                        creditCardButton.setEnabled(false);
+                    }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     creditCardButton.setEnabled(false);
@@ -82,6 +93,7 @@ public class DonationActivity extends AppCompatActivity {
         });
     }
 
+    // Show CreditCardActivity from Omise Android SDK
     void showCreditCardForm() {
         Intent intent = new Intent(this, CreditCardActivity.class);
         intent.putExtra(CreditCardActivity.EXTRA_PKEY, getString(R.string.omise_pkey));
@@ -120,11 +132,13 @@ public class DonationActivity extends AppCompatActivity {
         }
     }
 
+    // Show FinishPageActivity
     void showFinishPage() {
         Intent intent = new Intent(this, FinishPageActivity.class);
         startActivity(intent);
     }
 
+    // AsyncTask for HTTP POST Request
     private class DonatePostRequest extends AsyncTask<String, Void, Integer> {
         private static final String REQUEST_METHOD = "POST";
         private static final int READ_TIMEOUT = 15000;
@@ -193,6 +207,7 @@ public class DonationActivity extends AppCompatActivity {
         }
     }
 
+    // Show/Hide Progress Spinner
     private void showProgress(final boolean show) {
         int animTime = 200;
         try {

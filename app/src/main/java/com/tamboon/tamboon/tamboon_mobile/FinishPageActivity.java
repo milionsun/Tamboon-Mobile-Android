@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Shown after finish donation from DonationActivity.java
+ * Press button to go back to first page (CharityListActivity.java)
+ */
+
 public class FinishPageActivity extends AppCompatActivity {
 
     @Override

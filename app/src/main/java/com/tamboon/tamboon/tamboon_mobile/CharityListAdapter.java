@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Created by Milion on 12/27/2017.
+ * Adapter for CharityListActivity.java
+ * Show list of charity's names
  */
 
 public class CharityListAdapter extends RecyclerView.Adapter<CharityListAdapter.ViewHolder> {
