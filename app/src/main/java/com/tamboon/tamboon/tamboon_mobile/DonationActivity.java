@@ -2,8 +2,10 @@ package com.tamboon.tamboon.tamboon_mobile;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -185,6 +187,8 @@ public class DonationActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (result == 200) {
                 showFinishPage();
+            } else {
+                showAlertDialog();
             }
             showProgress(false);
         }
@@ -213,5 +217,18 @@ public class DonationActivity extends AppCompatActivity {
                 progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle(R.string.donation_error_title)
+                .setMessage(R.string.donation_error_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
     }
 }

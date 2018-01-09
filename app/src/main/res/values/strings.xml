@@ -3,6 +3,7 @@
 
     <string name="name_label">Name</string>
     <string name="amount_label">Amount</string>
+    <string name="credit_card_button_label">Set Credit Card</string>
 
     <string name="finish_label">Donation complete</string>
     <string name="finish_button_label">Home</string>
@@ -15,4 +16,7 @@
     <string name="connection_timeout_message">Cannot connect to server!</string>
     <string name="retry">Retry</string>
     <string name="cancel">Cancel</string>
+
+    <string name="donation_error_title">Donation Error</string>
+    <string name="donation_error_message">Please contact administrator</string>
 </resources>
